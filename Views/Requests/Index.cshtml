@@ -1,0 +1,74 @@
+﻿@model Requests.Models.IndexViewModel
+
+@{
+    ViewData["Title"] = "Заявки";
+}
+
+<h1>Список заявок</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form method="get">
+    <div class="form-inline">
+        <label>Статус: </label>
+        <select name="status" asp-items="@Model.FilterViewModel.Statuses" class="form-control"></select>
+        <label>С даты: </label>
+        <input type="date" min="2020-04-01" max =@DateTime.Now name="date1" value="@Model.FilterViewModel.SelectedDate1" class="form-control">
+        <label>По дату: </label>
+        <input name="date2" type="date" min="2020-04-01" max =@DateTime.Now value="@Model.FilterViewModel.SelectedDate2" class="form-control">
+
+        <input type="submit" value="Фильтр" class="btn btn-outline-dark" />
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Имя
+            </th>
+            <th>
+                Содержание
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.StatusSort)"
+                   asp-route-status="@(Model.FilterViewModel.SelectedStatus)"
+                   asp-route-date1="@(Model.FilterViewModel.SelectedDate1)"
+                   asp-route-date2="@(Model.FilterViewModel.SelectedDate2)">Статус</a>
+            </th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.DateSort)"
+                   asp-route-status="@(Model.FilterViewModel.SelectedStatus)"
+                   asp-route-date1="@(Model.FilterViewModel.SelectedDate1)"
+                   asp-route-date2="@(Model.FilterViewModel.SelectedDate2)">Дата</a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Requests)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
